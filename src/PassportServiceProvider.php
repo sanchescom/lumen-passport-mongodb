@@ -62,18 +62,18 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function forAccessTokens()
     {
-		$this->app->group(['prefix' => config('api.prefix')], function () {
-			$this->app->post('/oauth/token', [
+		$this->app->router->group(['prefix' => config('api.prefix')], function () {
+			$this->app->router->post('/oauth/token', [
 	            'uses' => '\Kayrules\LumenPassport\Http\Controllers\AccessTokenController@issueToken'
 	        ]);
 		});
 
-        $this->app->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
-            $this->app->get('/oauth/tokens', [
+        $this->app->router->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
+            $this->app->router->get('/oauth/tokens', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\AuthorizedAccessTokenController@forUser',
             ]);
 
-            $this->app->delete('/oauth/tokens/{token_id}', [
+            $this->app->router->delete('/oauth/tokens/{token_id}', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\AuthorizedAccessTokenController@destroy',
             ]);
         });
@@ -86,8 +86,8 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function forTransientTokens()
     {
-		$this->app->group(['prefix' => config('api.prefix')], function () {
-	        $this->app->post('/oauth/token/refresh', [
+		$this->app->router->group(['prefix' => config('api.prefix')], function () {
+	        $this->app->router->post('/oauth/token/refresh', [
 	            'middleware' => ['auth'],
 	            'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\TransientTokenController@refresh',
 	        ]);
@@ -101,20 +101,20 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function forClients()
     {
-        $this->app->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
-            $this->app->get('/oauth/clients', [
+        $this->app->router->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
+            $this->app->router->get('/oauth/clients', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\ClientController@forUser',
             ]);
 
-            $this->app->post('/oauth/clients', [
+            $this->app->router->post('/oauth/clients', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\ClientController@store',
             ]);
 
-            $this->app->put('/oauth/clients/{client_id}', [
+            $this->app->router->put('/oauth/clients/{client_id}', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\ClientController@update',
             ]);
 
-            $this->app->delete('/oauth/clients/{client_id}', [
+            $this->app->router->delete('/oauth/clients/{client_id}', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\ClientController@destroy',
             ]);
         });
@@ -127,20 +127,20 @@ class PassportServiceProvider extends ServiceProvider
      */
     public function forPersonalAccessTokens()
     {
-        $this->app->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
-            $this->app->get('/oauth/scopes', [
+        $this->app->router->group(['prefix' => config('api.prefix'), 'middleware' => ['auth']], function () {
+            $this->app->router->get('/oauth/scopes', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\ScopeController@all',
             ]);
 
-            $this->app->get('/oauth/personal-access-tokens', [
+            $this->app->router->get('/oauth/personal-access-tokens', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\PersonalAccessTokenController@forUser',
             ]);
 
-            $this->app->post('/oauth/personal-access-tokens', [
+            $this->app->router->post('/oauth/personal-access-tokens', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\PersonalAccessTokenController@store',
             ]);
 
-            $this->app->delete('/oauth/personal-access-tokens/{token_id}', [
+            $this->app->router->delete('/oauth/personal-access-tokens/{token_id}', [
                 'uses' => '\MoeenBasra\LaravelPassportMongoDB\Http\Controllers\PersonalAccessTokenController@destroy',
             ]);
         });
